@@ -1,0 +1,62 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "x57iHWZWbSm_"
+      },
+      "outputs": [],
+      "source": [
+        "# Title: Detection Powered by Natural Language Processing: Exposing the Truth with Advanced Fake News\n",
+        "\n",
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.feature_extraction.text import TfidfVectorizer\n",
+        "from sklearn.linear_model import PassiveAggressiveClassifier\n",
+        "from sklearn.metrics import accuracy_score, confusion_matrix\n",
+        "\n",
+        "# Load dataset (example: 'news.csv' with columns 'text' and 'label')\n",
+        "df = pd.read_csv('news.csv')\n",
+        "\n",
+        "# Features and labels\n",
+        "X = df['text']\n",
+        "y = df['label']  # 'FAKE' or 'REAL'\n",
+        "\n",
+        "# Split the dataset\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=7)\n",
+        "\n",
+        "# Vectorize text data\n",
+        "vectorizer = TfidfVectorizer(stop_words='english', max_df=0.7)\n",
+        "X_train_vec = vectorizer.fit_transform(X_train)\n",
+        "X_test_vec = vectorizer.transform(X_test)\n",
+        "\n",
+        "# Model - PassiveAggressiveClassifier is good for online learning\n",
+        "model = PassiveAggressiveClassifier(max_iter=50)\n",
+        "model.fit(X_train_vec, y_train)\n",
+        "\n",
+        "# Predict and evaluate\n",
+        "y_pred = model.predict(X_test_vec)\n",
+        "score = accuracy_score(y_test, y_pred)\n",
+        "\n",
+        "print(f\"Model Accuracy: {round(score * 100, 2)}%\")\n",
+        "print(\"Confusion Matrix:\")\n",
+        "print(confusion_matrix(y_test, y_pred))"
+      ]
+    }
+  ]
+}
